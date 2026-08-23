@@ -28,7 +28,7 @@ from ..schemas import (
     HistoricoOut,
     RescheduleIn,
 )
-from ..tempo import TZ, label_humano
+from ..tempo import TZ, label_humano, local
 
 router = APIRouter(tags=["agendamentos"])
 
@@ -49,8 +49,8 @@ def _out(ap: Appointment, completo: bool = True) -> AppointmentOut:
         resource_id=ap.resource_id,
         cliente_nome=ap.cliente_nome,
         cliente_telefone=ap.cliente_telefone,
-        inicio=ap.periodo.lower,
-        fim=ap.periodo.upper,
+        inicio=local(ap.periodo.lower),
+        fim=local(ap.periodo.upper),
         label_humano=label_humano(ap.periodo.lower),
         status=ap.status,
         origem=ap.origem,
