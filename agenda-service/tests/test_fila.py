@@ -153,7 +153,7 @@ def test_aceite_agenda_pelo_mesmo_caminho_de_sempre(client, catalogo, org_id, ca
     assert resposta.status_code == 200, resposta.text
     novo = resposta.json()
     assert novo["cliente_nome"] == "Ana"
-    assert novo["inicio"].startswith(f"{QUARTA}T13:00") or novo["inicio"].startswith("2027-04-07T13:00")
+    assert novo["inicio"] == SLOT
     assert novo["origem"] == "cliente"
     assert "fila de espera" in novo["observacoes"]
     # o compromisso nasceu completo: régua de lembretes e risco calculado
