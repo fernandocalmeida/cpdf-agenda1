@@ -22,7 +22,7 @@ from ..schemas import (
     RuleOut,
     RulePatch,
 )
-from ..tempo import utc
+from ..tempo import local, utc
 
 router = APIRouter(tags=["grade"])
 
@@ -283,8 +283,8 @@ def listar_blocks(
         BlockOut(
             id=b.id,
             resource_id=b.resource_id,
-            inicio=b.periodo.lower,
-            fim=b.periodo.upper,
+            inicio=local(b.periodo.lower),
+            fim=local(b.periodo.upper),
             motivo=b.motivo,
         )
         for b in db.scalars(q.order_by(text("lower(periodo)")))
@@ -327,8 +327,8 @@ def criar_block(
     corpo = BlockOut(
         id=bloco.id,
         resource_id=bloco.resource_id,
-        inicio=dados.inicio,
-        fim=dados.fim,
+        inicio=local(dados.inicio),
+        fim=local(dados.fim),
         motivo=bloco.motivo,
     )
     idem.gravar(db, cred.org_id, request, corpo.model_dump(mode="json"), 201, cred.titular)
