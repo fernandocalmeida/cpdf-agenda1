@@ -28,7 +28,7 @@ from ..db import get_db
 from ..errors import ApiError, NaoEncontrado
 from ..models import WaitlistEntry
 from ..schemas import AppointmentOut, WaitlistIn, WaitlistOut
-from ..tempo import label_humano, utc
+from ..tempo import label_humano, local, utc
 from .appointments import _e_do_titular, _exigir_titular, _out
 
 log = logging.getLogger("agenda.fila")
@@ -48,15 +48,15 @@ def _saida(entrada: WaitlistEntry, posicao: int | None = None, avisos=None) -> W
         resource_id=entrada.resource_id,
         cliente_nome=entrada.cliente_nome,
         cliente_telefone=entrada.cliente_telefone,
-        janela_inicio=entrada.janela_desejada.lower,
-        janela_fim=entrada.janela_desejada.upper,
+        janela_inicio=local(entrada.janela_desejada.lower),
+        janela_fim=local(entrada.janela_desejada.upper),
         janela_humana=_janela_humana(
             entrada.janela_desejada.lower, entrada.janela_desejada.upper
         ),
         status=entrada.status,
         posicao=posicao,
         expira_em=entrada.expira_em,
-        slot_ofertado=entrada.slot_ofertado.lower if entrada.slot_ofertado else None,
+        slot_ofertado=local(entrada.slot_ofertado.lower) if entrada.slot_ofertado else None,
         avisos=avisos or [],
     )
 
